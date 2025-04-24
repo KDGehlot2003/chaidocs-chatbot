@@ -1,8 +1,9 @@
 'use client'
+import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<{ sender: 'user' | 'bot'; text: string }[]>([])
@@ -12,7 +13,7 @@ export default function ChatPage() {
   const sendMessage = async () => {
     if (!input.trim()) return
   
-    const newMessage = { sender: 'user', text: input }
+    const newMessage: { sender: 'user' | 'bot'; text: string } = { sender: 'user', text: input }
     setMessages((prev) => [...prev, newMessage])
     const query = input
     setInput('')
@@ -44,7 +45,7 @@ export default function ChatPage() {
           sender: 'bot' as const,
           text: `**ChaiBot:**\n\n${data.Bot}\n\n${
             data.Sources?.length
-              ? `**Sources:**\n${data.Sources.map((s) => `- [${s}](${s})`).join('\n')}`
+              ? `**Sources:**\n${data.Sources.map((s:any) => `- [${s}](${s})`).join('\n')}`
               : ''
           }`,
         }
@@ -69,7 +70,7 @@ export default function ChatPage() {
     <div className="flex flex-col h-screen  text-white ">
       <div className="title-wrapper sl-flex astro-kmkmnagf"> 
         <a href="/" className="site-title sl-flex astro-m46x6ez3">  
-        <img className="light:sl-hidden print:hidden astro-m46x6ez3 pl-4 pt-4" alt="" src="https://chaidocs.vercel.app/_astro/chai-docs-white.CjIIo2Jk.png" width="180"  /> 
+        <Image className="light:sl-hidden print:hidden astro-m46x6ez3 pl-4 pt-4" alt="" src="https://chaidocs.vercel.app/_astro/chai-docs-white.CjIIo2Jk.png" width="180"  /> 
         <span className="sr-only astro-m46x6ez3" translate="no"> Chai aur Docs 
         </span> 
       </a>  
@@ -98,7 +99,12 @@ export default function ChatPage() {
               <div className="prose prose-invert max-w-none">
               <ReactMarkdown
                 components={{
-                  code({ node, inline, className, children, ...props }) {
+                  code({ node, inline, className, children, ...props }: {
+                    node?: any;
+                    inline?: boolean;
+                    className?: string;
+                    children?: React.ReactNode;
+                  }) {
                     const match = /language-(\w+)/.exec(className || '')
                     return !inline && match ? (
                       <SyntaxHighlighter
